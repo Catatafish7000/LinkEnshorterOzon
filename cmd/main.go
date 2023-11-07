@@ -8,14 +8,14 @@ import (
 	"LinkEnshorter/pb"
 	"context"
 	"fmt"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	panichandler "github.com/kazegusuri/grpc-panic-handler"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"net"
 	"net/http"
 	"os"
-
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 func runRest(ctx context.Context) {
@@ -38,7 +38,9 @@ func runGrpc(ctx context.Context, server pb.UrlShorterServer) {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	s := grpc.NewServer()
+	uIntOpt := grpc.UnaryInterceptor(panichandler.UnaryPanicHandler)
+	sIntOpt := grpc.StreamInterceptor(panichandler.StreamPanicHandler)
+	s := grpc.NewServer(uIntOpt, sIntOpt)
 	pb.RegisterUrlShorterServer(s, server)
 	log.Printf("server listening at %v", listener.Addr())
 	if err := s.Serve(listener); err != nil {
