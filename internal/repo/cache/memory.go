@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+const ttl = time.Hour * 24
+
 type link struct {
 	url       string
 	createdAt time.Time
@@ -56,7 +58,7 @@ func (r *repo) Clear(ctx context.Context) {
 	defer r.mx.Unlock()
 	current := time.Now()
 	for i := range r.data {
-		if current.Sub(r.data[i].createdAt) >= time.Hour*24 {
+		if current.Sub(r.data[i].createdAt) >= ttl {
 			delete(r.data, i)
 		}
 	}

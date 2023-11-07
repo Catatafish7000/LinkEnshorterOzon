@@ -9,11 +9,8 @@ import (
 	"time"
 )
 
-const Alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
-const AlphLen = 63
-
 type Service struct {
-	Repo      repo
+	repo      repo
 	generator generator
 }
 
@@ -25,20 +22,16 @@ func NewService(Repo repo, generator generator) *Service {
 }
 
 func (s *Service) ShowLink(ctx context.Context, hash string) (string, error) {
-	url, err := s.Repo.GetURL(ctx, hash)
+	url, err := s.repo.GetURL(ctx, hash)
 	return url, err
 }
 
 func (s *Service) SaveShortURL(ctx context.Context, url string) (string, error) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	var hash string
-	var errGen error
 	for {
 		hash = s.generator.GenerateHash()
-		if errGen != nil {
-			return "", errGen
-		}
-		err := s.Repo.SaveHashByURL(ctx, url, hash)
+		err := s.repo.SaveHashByURL(ctx, url, hash)
 		if err == nil {
 			break
 		}
