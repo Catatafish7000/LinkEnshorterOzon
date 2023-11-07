@@ -4,9 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"math/rand"
 	"strings"
-	"time"
 )
 
 type Service struct {
@@ -27,7 +25,6 @@ func (s *Service) ShowLink(ctx context.Context, hash string) (string, error) {
 }
 
 func (s *Service) SaveShortURL(ctx context.Context, url string) (string, error) {
-	rand.Seed(time.Now().UTC().UnixNano())
 	var hash string
 	for {
 		hash = s.generator.GenerateHash()

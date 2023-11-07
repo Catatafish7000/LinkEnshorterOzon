@@ -1,7 +1,8 @@
 package generator
 
 import (
-	"math/rand"
+	"github.com/ericlagergren/saferand"
+	"time"
 )
 
 const alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
@@ -13,10 +14,11 @@ func NewGenerator() *Generator {
 }
 
 func (g *Generator) GenerateHash() string {
+	saferand.Seed(uint64(time.Now().UTC().UnixNano()))
 	hash := make([]byte, 10)
 	alphLen := len(alphabet)
 	for i := range hash {
-		hash[i] = alphabet[rand.Intn(alphLen)]
+		hash[i] = alphabet[saferand.Intn(alphLen)]
 	}
 	return string(hash)
 }
