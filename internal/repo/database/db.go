@@ -17,21 +17,6 @@ const (
 	DBName   = "db"
 )
 
-type ConfigDB struct {
-	Host     string
-	Port     int
-	Username string
-	Password string
-	DBName   string
-}
-
-type Cfg struct {
-}
-type Link struct {
-	URL       string
-	Hash      string
-	CreatedAt time.Time
-}
 type repo struct {
 	DB *sqlx.DB
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"LinkEnshorter/internal/cleaner"
 	"LinkEnshorter/internal/controller"
 	"LinkEnshorter/internal/generator"
 	"LinkEnshorter/internal/service"
@@ -54,6 +55,8 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 	repo, err := strategy.RepoStrategy(os.Args)
+	c := cleaner.NewCleaner(repo)
+	c.Clean(ctx)
 	if err != nil {
 		log.Fatalf("failed to init repo. err:%v", err)
 	}
