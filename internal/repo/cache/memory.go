@@ -14,20 +14,20 @@ type link struct {
 	url       string
 	createdAt time.Time
 }
-type repo struct {
+type Repo struct {
 	data map[string]link
 	mx   sync.Mutex
 }
 
-func NewRepo() *repo {
+func NewRepo() *Repo {
 	data := make(map[string]link)
-	return &repo{
+	return &Repo{
 		data: data,
 		mx:   sync.Mutex{},
 	}
 }
 
-func (r *repo) SaveHashByURL(ctx context.Context, url, hash string) error {
+func (r *Repo) SaveHashByURL(ctx context.Context, url, hash string) error {
 	r.mx.Lock()
 	defer r.mx.Unlock()
 	_, ok := r.data[hash]
@@ -42,7 +42,7 @@ func (r *repo) SaveHashByURL(ctx context.Context, url, hash string) error {
 	return nil
 }
 
-func (r *repo) GetURL(ctx context.Context, hash string) (string, error) {
+func (r *Repo) GetURL(ctx context.Context, hash string) (string, error) {
 	r.mx.Lock()
 	defer r.mx.Unlock()
 	ans, ok := r.data[hash]
@@ -53,7 +53,7 @@ func (r *repo) GetURL(ctx context.Context, hash string) (string, error) {
 	return ans.url, nil
 }
 
-func (r *repo) Clear(ctx context.Context) {
+func (r *Repo) Clear(ctx context.Context) {
 	r.mx.Lock()
 	defer r.mx.Unlock()
 	current := time.Now()
